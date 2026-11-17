@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pizza Shop 🍕</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+
+  <!-- ===== TOP BAR: shop sign + switches ===== -->
+  <header id="topbar">
+    <div class="awning"></div>
+    <label class="sign">
+      <span class="sign-icon">🍕</span>
+      <input id="shopName" type="text" maxlength="26" autocomplete="off" spellcheck="false"
+             placeholder="Type your shop name ✏️">
+    </label>
+    <div class="top-controls">
+      <button id="talkBtn" class="switch" type="button" aria-pressed="false">
+        <span class="sw-label">Shop Talk<small class="ja">おみせの会話</small></span>
+        <span class="sw-track"><span class="sw-knob"></span></span>
+        <b class="sw-state">OFF</b>
+      </button>
+      <button id="jaBtn" class="pill" type="button" aria-pressed="false">日本語</button>
+      <button id="soundBtn" class="round" type="button" aria-label="Sound">🔊</button>
+    </div>
+  </header>
+
+  <!-- ===== TRAY: pizza + toppings ===== -->
+  <main id="tray">
+    <div id="hint"></div>
+    <svg id="pizzaBase" class="glass" viewBox="0 0 680 552" aria-hidden="true"></svg>
+    <div id="items"></div>
+    <div id="cards"></div>
+    <div id="fx"></div>
+    <div id="trash" aria-label="Trash">🗑️</div>
+    <button id="bakeBtn" type="button">🔥 Bake!<small class="ja">ピザをやく</small></button>
+    <div id="toolbar" hidden>
+      <button type="button" data-act="flip"    title="Flip">↔️</button>
+      <button type="button" data-act="bigger"  title="Bigger">➕</button>
+      <button type="button" data-act="smaller" title="Smaller">➖</button>
+      <button type="button" data-act="rotL"    title="Turn left">↺</button>
+      <button type="button" data-act="rotR"    title="Turn right">↻</button>
+      <button type="button" data-act="front"   title="To front">⬆️</button>
+      <button type="button" data-act="back"    title="To back">⬇️</button>
+      <button type="button" data-act="delete"  title="Delete" class="danger">🗑️</button>
+    </div>
+  </main>
+
+  <!-- ===== TOPPINGS PANEL ===== -->
+  <button id="panelTab" type="button" aria-label="Hide or show toppings"><span class="hide-txt">Hide ▶</span><span class="show-txt">◀ Toppings</span></button>
+  <aside id="panel">
+    <h2>Toppings <span class="ja">トッピング</span></h2>
+    <div id="grid"></div>
+    <div id="actions">
+      <button type="button" id="undoBtn"   ><i>↶</i>Undo<small class="ja">もどす</small></button>
+      <button type="button" id="cardBtn"   ><i>🔤</i>Text<small class="ja">もじ</small></button>
+      <button type="button" id="saveBtn"   ><i>💾</i>Save<small class="ja">ほぞん</small></button>
+      <button type="button" id="photoBtn"  ><i>📷</i>Picture<small class="ja">しゃしん</small></button>
+      <button type="button" id="resetBtn"  ><i>🔄</i>Reset<small class="ja">リセット</small></button>
+    </div>
+  </aside>
+
+  <!-- ===== OVEN (baking animation) ===== -->
+  <div id="bake" hidden>
+    <div class="oven">
+      <div class="oven-top">
+        <span class="knob"></span><span class="oven-face">◕‿◕</span><span class="knob"></span>
+      </div>
+      <div class="cavity">
+        <div class="coil top"></div>
+        <div class="flames"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="coil bottom"></div>
+      </div>
+      <span class="foot left"></span><span class="foot right"></span>
+    </div>
+    <img id="ovenPizza" alt="">
+    <div class="door"><div class="door-glass"></div><span class="handle"></span></div>
+    <div id="steam"></div>
+    <div id="bakeText"></div>
+  </div>
+
+  <!-- ===== FINISHED PIZZA ===== -->
+  <div id="done" hidden>
+    <div class="done-name" id="doneName"></div>
+    <h2 class="done-title">✨ Your pizza is ready! ✨<small class="ja">ピザができたよ！</small></h2>
+    <img id="donePizza" alt="My pizza">
+    <div class="done-buttons">
+      <button type="button" class="btn ok" id="donePhoto">📷 Save picture<span class="ja">しゃしん</span></button>
+      <button type="button" class="btn danger" id="doneAgain">🍕 Make Another Pizza<span class="ja">もう一つ</span></button>
+      <button type="button" class="btn" id="doneBack">✏️ Back to decorating<span class="ja">もどる</span></button>
+    </div>
+    <div id="confetti"></div>
+  </div>
+
+  <!-- ===== MODALS ===== -->
+  <div id="cardModal" class="modal" hidden>
+    <div class="box">
+      <h3>Write words <span class="ja">もじを書こう</span></h3>
+      <input id="cardInput" type="text" maxlength="30" autocomplete="off" placeholder="e.g. Yuki's Super Pizza">
+      <div class="row">
+        <button type="button" class="btn ok" id="cardOk">OK</button>
+        <button type="button" class="btn" id="cardCancel">Cancel <span class="ja">やめる</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resetModal" class="modal" hidden>
+    <div class="box">
+      <h3 id="resetTitle">Start over? <span class="ja">さいしょからにする？</span></h3>
+      <p>All toppings will be cleared.<br><span class="ja">トッピングがきえます。</span></p>
+      <div class="row">
+        <button type="button" class="btn danger" id="resetYes">Yes <span class="ja">はい</span></button>
+        <button type="button" class="btn" id="resetNo">No <span class="ja">いいえ</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="photoModal" class="modal" hidden>
+    <div class="box photo">
+      <h3>Your pizza picture! <span class="ja">ピザのしゃしん</span></h3>
+      <img id="photoImg" alt="My pizza">
+      <p class="tip">iPad: press and hold the picture to save it.<br><span class="ja">iPad：しゃしんを長おしして ほぞんしてね。</span></p>
+      <div class="row">
+        <a class="btn ok" id="photoDownload" download="my-pizza.png">⬇️ Download</a>
+        <button type="button" class="btn ok" id="photoShare" hidden>📤 Share</button>
+        <button type="button" class="btn" id="photoClose">Close <span class="ja">とじる</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" hidden></div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
